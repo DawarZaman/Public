@@ -1,0 +1,185 @@
+//Traffic Lights and Pedestrian Lights code using Switch-Case and Priority wise attach interrupt.
+//Made by TEAM MICROBOTS Work Hard, Have Fun, Make History! :) 
+
+int red = 5;
+int yellow = 4;
+int green = 8;
+int red1 = 7;
+int green1 = 6;
+int state = 0;  
+volatile bool trig1 = false;   
+volatile bool trig2 = false;
+long debouncing_time = 15; //Debouncing Time in Milliseconds
+volatile unsigned long last_micros;
+
+
+
+  
+void buttonPressed1()           //ISR function excutes when push button at pinD2 is pressed
+{                    
+   if((long)(micros() - last_micros) >= debouncing_time * 1000)
+  {
+   pedChange();  
+   delay(12000);
+   last_micros = micros();
+   }
+  else
+ {
+ pedAndTrafficLights();
+ }
+    
+}
+
+
+void buttonPressed2()           //ISR function excutes when push button at pinD3 is pressed                             
+{                    
+  if((long)(micros() - last_micros) >= debouncing_time * 1000)
+  {
+  busChange();
+  delay(12000);
+  last_micros = micros();
+  }
+    
+  else
+  {
+  pedAndTrafficLights();
+  }
+}
+
+
+void setup()
+{
+    pinMode(red, OUTPUT);
+    pinMode(yellow, OUTPUT);
+    pinMode(green, OUTPUT);
+    pinMode(red1, OUTPUT);
+    pinMode(green1, OUTPUT);
+    pinMode(2, INPUT);
+    pinMode(3, INPUT);
+  attachInterrupt(0, buttonPressed1, RISING);  //  function for creating external interrupts at pin2 on Rising (LOW to HIGH) High priority interrupt pin
+  attachInterrupt(1, buttonPressed2, RISING);  //  function for creating external interrupts at pin3 on Rising (LOW to HIGH) Low priority interrupt pin  
+ 
+}
+
+
+void loop(){
+  
+  pedAndTrafficLights();
+}
+
+  
+
+
+
+void busChange(){
+  
+   digitalWrite(red, LOW);
+   digitalWrite(yellow, LOW);
+   digitalWrite(green, HIGH);
+   digitalWrite(red1, HIGH);
+   digitalWrite(green1, LOW);
+}
+
+void pedChange(){
+  
+    
+   
+   digitalWrite(green1, HIGH);
+   digitalWrite(red1, LOW);
+   digitalWrite(red, HIGH);
+   digitalWrite(yellow, LOW);
+   digitalWrite(green, LOW);
+}
+
+
+  
+  
+  
+void pedAndTrafficLights(){
+
+switch (state) {
+
+case 0:
+  
+    digitalWrite(red1, HIGH);
+    digitalWrite(green1, LOW);
+    delay(1000);
+    state = 1;
+    break;
+
+case 1:
+  
+    digitalWrite(red, LOW);
+    digitalWrite(yellow, HIGH);
+    digitalWrite(green, LOW);
+    delay(1000);
+    state = 2;
+    break;
+
+case 2:
+    
+   digitalWrite(red1, HIGH);
+   digitalWrite(green1, LOW);
+   delay(1000); 
+   state = 3;
+   break;
+
+case 3:
+  
+   digitalWrite(red, HIGH);
+   digitalWrite(yellow, LOW);
+   digitalWrite(green, LOW);
+   delay(1000);
+   state = 4;
+   break;
+
+case 4:
+  
+    digitalWrite(red1, LOW);
+    digitalWrite(green1, HIGH);
+    delay(3000);
+    state = 5;
+    break;
+
+case 5:
+  
+   digitalWrite(red1, HIGH);
+   digitalWrite(green1, LOW);
+   delay(2000);
+   state = 6;
+   break;
+
+case 6:
+  
+   digitalWrite(red, HIGH);
+   digitalWrite(yellow, HIGH);
+   digitalWrite(green, LOW);
+   state = 7;
+   break;
+
+case 7:
+    
+    digitalWrite(red1,HIGH);
+    digitalWrite(green1, LOW);
+    delay(2000);
+    state = 8;
+    break;
+
+case 8:
+  
+    digitalWrite(red, LOW);
+    digitalWrite(yellow, LOW);
+    digitalWrite(green, HIGH);
+    delay(2000);
+    state = 9;
+    break;
+
+case 9:
+  
+    digitalWrite(red1, HIGH);
+    digitalWrite(green1, LOW);
+    delay(2000);
+    state = 1;
+    break;
+}
+}
