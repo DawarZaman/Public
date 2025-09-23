@@ -2,6 +2,7 @@
 
 This repository contains some of the my projects implemented at HSHL.
 Each project focuses on solving real-world challenges through innovative engineering and technology solutions.
+Each project contains a .pdf documentation file which can be easily viewed.
 
 ---
 
