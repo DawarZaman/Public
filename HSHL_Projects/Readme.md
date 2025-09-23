@@ -1,1 +1,1 @@
-This file contains projects implemented at HSHL
+This file contains some of the projects implemented at HSHL
